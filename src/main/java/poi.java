@@ -3,6 +3,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.Test;
 
@@ -17,6 +18,7 @@ import java.util.Date;
  * @Version V1.0
  **/
 public class poi {
+    //poi 基本写入
     String PATH = "D:\\idea-projects\\lianxi\\PoiAndEaseExcle";
     @Test
     public void poi07 () throws Exception {
@@ -73,5 +75,61 @@ public class poi {
         fileOutputStream.close();
         //输出
         System.out.println("03版本写入excel,yes");
+    }
+    //poi大量写入
+    //03版 1.72秒
+    @Test
+    public void poi03bigwrite() throws Exception {
+        //起始时间
+        long begin = System.currentTimeMillis();
+
+        Workbook workbook = new HSSFWorkbook();
+        Sheet sheet = workbook.createSheet("03版本大数据量写入");
+        //当写入量大于65536时会报出异常(java.lang.IllegalArgumentException: Invalid row number (65536) outside allowable range (0..65535))(03版本只支持这么多行)
+        for (int rowNum = 0;rowNum <65535;rowNum++){
+            Row row = sheet.createRow(rowNum);
+            for (int cellNum = 0;cellNum<11;cellNum++){
+                row.createCell(cellNum).setCellValue(cellNum);
+
+            }
+        }
+        System.out.println("执行over");
+        //创建文件
+        FileOutputStream fileOutputStream = new FileOutputStream(PATH + "//大数据写入.xls");
+        //写入
+        workbook.write(fileOutputStream);
+        //关闭流
+        fileOutputStream.close();
+        //结束时间
+        long end = System.currentTimeMillis();
+        System.out.println((double) (end-begin)/1000);
+    }
+    //07版速度较慢耗时较长6.703 得知07版大量写入慢 优化，缓存
+    @Test
+    public void poi07bigwrite() throws Exception {
+        long begin = System.currentTimeMillis();
+
+        Workbook workbook = new XSSFWorkbook();
+
+        Sheet sheet = workbook.createSheet("07版本大量写入数据");
+
+        for (int rowNum=0;rowNum<65535;rowNum++){
+            Row row = sheet.createRow(rowNum);
+            for (int cellNum=0;cellNum<10;cellNum++){
+                row.createCell(cellNum).setCellValue(cellNum);
+            }
+        }
+        System.out.println("写入完毕");
+        FileOutputStream fileOutputStream = new FileOutputStream(PATH + "//07bigwirte.xlsx");
+        workbook.write(fileOutputStream);
+        fileOutputStream.close();
+        long end = System.currentTimeMillis();
+        System.out.println((double) (end-begin)/1000);
+    }
+    //加速07版
+    @Test
+    public void poirunwrite(){
+        Workbook workbook = new SXSSFWorkbook();
+
     }
 }
