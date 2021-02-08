@@ -104,7 +104,7 @@ public class poi {
         long end = System.currentTimeMillis();
         System.out.println((double) (end-begin)/1000);
     }
-    //07版速度较慢耗时较长6.703 得知07版大量写入慢 优化，缓存
+    //07版速度较慢耗时较长6.703 得知07版大量写入慢 优化，缓存(十万条数据时间13秒)
     @Test
     public void poi07bigwrite() throws Exception {
         long begin = System.currentTimeMillis();
@@ -113,7 +113,7 @@ public class poi {
 
         Sheet sheet = workbook.createSheet("07版本大量写入数据");
 
-        for (int rowNum=0;rowNum<65535;rowNum++){
+        for (int rowNum=0;rowNum<100000;rowNum++){
             Row row = sheet.createRow(rowNum);
             for (int cellNum=0;cellNum<10;cellNum++){
                 row.createCell(cellNum).setCellValue(cellNum);
@@ -126,10 +126,29 @@ public class poi {
         long end = System.currentTimeMillis();
         System.out.println((double) (end-begin)/1000);
     }
-    //加速07版
+    //加速07版写入十万条数据时间（1.984）秒 注意产生的临时文件删除掉
     @Test
-    public void poirunwrite(){
+    public void poi07bigwriteS() throws Exception {
+        long begin = System.currentTimeMillis();
+
         Workbook workbook = new SXSSFWorkbook();
 
+        Sheet sheet = workbook.createSheet("07版本大量写入数据加速版");
+
+        for (int rowNum=0;rowNum<100000;rowNum++){
+            Row row = sheet.createRow(rowNum);
+            for (int cellNum=0;cellNum<10;cellNum++){
+                row.createCell(cellNum).setCellValue(cellNum);
+            }
+        }
+        System.out.println("写入完毕");
+        FileOutputStream fileOutputStream = new FileOutputStream(PATH + "//07bigwirteS.xlsx");
+        workbook.write(fileOutputStream);
+        //清除临时file
+        ((SXSSFWorkbook) workbook).dispose();
+
+        fileOutputStream.close();
+        long end = System.currentTimeMillis();
+        System.out.println((double) (end-begin)/1000);
     }
 }
