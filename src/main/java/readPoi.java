@@ -7,7 +7,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileInputStream;
-import java.io.IOException;
 
 /**
  * @ClassName readPoi
@@ -20,7 +19,7 @@ public class readPoi {
     String PATH = "D:\\idea-projects\\lianxi\\PoiAndEaseExcle";
     //读取03版
     @Test
-    public void read03() throws IOException {
+    public void read03() throws Exception {
 
 
         //获取文件流
@@ -60,6 +59,26 @@ public class readPoi {
         //关闭流
         fileInputStream.close();
     }
-    //计算公式
+    //大数据量读取
+    @Test
+    public void bigread() throws Exception {
+        //读取流
+        FileInputStream fileInputStream = new FileInputStream(PATH + "//07bigwirte.xlsx");
+        //工作簿
+        Workbook workbook = new XSSFWorkbook(fileInputStream);
+        //查找页
+        Sheet sheetAt = workbook.getSheetAt(0);
+        //遍历循环数据
+        for (int rowNum=0;rowNum<10000;rowNum++){
+            Row row = sheetAt.getRow(rowNum);
+            for (int cellNum=0;cellNum<10;cellNum++){
+                Cell cell = row.getCell(cellNum);
+                double numericCellValue = cell.getNumericCellValue();
+                System.out.println(numericCellValue);
+            }
+        }
+        //关闭流
+        fileInputStream.close();
+    }
 
 }
