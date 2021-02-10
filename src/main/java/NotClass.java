@@ -14,7 +14,7 @@ import java.io.IOException;
  **/
 public class NotClass {
     String PATH = "D:\\idea-projects\\lianxi\\PoiAndEaseExcle";
-    //不同类型的读取
+    //不同类型的读取。
     public static void main(String[] args) {
 
     }
