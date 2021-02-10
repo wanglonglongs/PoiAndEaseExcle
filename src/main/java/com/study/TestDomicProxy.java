@@ -10,7 +10,7 @@ package com.study;
 public class TestDomicProxy {
     public static void main(String[] args) {
         //代理目标类
-        DynamicProxy dynamicProxy = new DynamicProxy(new ServiceImpl01());
+        DynamicProxy dynamicProxy = new DynamicProxy(new ServiceImpl02());
 
         //获取代理
         StaticProxyService proxy = (StaticProxyService) dynamicProxy.getProxy();

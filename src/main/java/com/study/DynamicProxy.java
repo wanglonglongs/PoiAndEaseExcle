@@ -45,6 +45,8 @@ public class DynamicProxy implements InvocationHandler {
         }
         //执行目标类的方法
         result = method.invoke(target,args);
+        //entityLog.setRelust(result.toString());空的不能toString
+        System.out.println(entityLog);
         return result;
     }
 }
